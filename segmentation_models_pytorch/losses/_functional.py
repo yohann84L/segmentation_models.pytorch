@@ -169,6 +169,9 @@ def soft_dice_score(
         output: torch.Tensor, target: torch.Tensor, smooth: float = 0.0, eps: float = 1e-7, dims=None
 ) -> torch.Tensor:
     assert output.size() == target.size()
+    output_type = output.dtype
+    output = to_tensor(output, dtype=torch.float32)
+    target = to_tensor(target, dtype=torch.float32)
     if dims is not None:
         intersection = torch.sum(output * target, dim=dims)
         cardinality = torch.sum(output + target, dim=dims)
@@ -176,7 +179,7 @@ def soft_dice_score(
         intersection = torch.sum(output * target)
         cardinality = torch.sum(output + target)
     dice_score = (2.0 * intersection + smooth) / (cardinality + smooth).clamp_min(eps)
-    return dice_score
+    return to_tensor(dice_score, dtype=output_type)
 
 
 def soft_tversky_score(output: torch.Tensor, target: torch.Tensor, alpha: float, beta: float,
