@@ -165,7 +165,7 @@ def soft_jaccard_score(
 
     union = cardinality - intersection
     jaccard_score = (intersection + smooth) / (union + smooth).clamp_min(eps)
-    return to_tensor(jaccard_score, dtype=output_type)
+    return jaccard_score
 
 
 def soft_dice_score(
@@ -182,7 +182,7 @@ def soft_dice_score(
         intersection = torch.sum(output * target)
         cardinality = torch.sum(output + target)
     dice_score = (2.0 * intersection + smooth) / (cardinality + smooth).clamp_min(eps)
-    return to_tensor(dice_score, dtype=output_type)
+    return dice_score
 
 
 def soft_tversky_score(output: torch.Tensor, target: torch.Tensor, alpha: float, beta: float,
